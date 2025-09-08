@@ -1,0 +1,33 @@
+name: AgriSmart
+description: >
+  Votre compagnon agricole intelligent : une application mobile innovante qui détecte les maladies des plantes par image,
+  offre des traitements personnalisés et connecte les agriculteurs à une base de connaissances et à des experts, pour des récoltes saines et durables.
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.4 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  google_fonts: ^6.3.1
+  image_picker: ^1.1.2
+  shared_preferences: ^2.2.2
+  intl: ^0.20.2
+  google_ml_kit: ^0.20.0
+  google_mlkit_image_labeling: ^0.14.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/models/model.tflite
