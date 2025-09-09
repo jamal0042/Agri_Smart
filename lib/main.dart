@@ -4,6 +4,7 @@ import 'package:AgriSmart/screens/main_navigation.dart';
 import 'package:AgriSmart/services/storage_service.dart';
 import 'package:firebase_core/firebase_core.dart'; // Import de base de Firebase
 import 'firebase_options.dart'; // Fichier de configuration généré par FlutterFire
+import 'package:AgriSmart/screens/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +29,8 @@ class MyApp extends StatelessWidget {
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: ThemeMode.system,
-      home: const MainNavigation(), // ← ici on démarre sur ton app
+      home: const SplashScreen(),
+      //home: const MainNavigation(), // ← ici on démarre sur ton app
     );
   }
 }
