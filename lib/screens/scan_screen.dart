@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:AgriSmart/services/disease_service.dart';
 import 'package:AgriSmart/services/storage_service.dart';
 import 'package:AgriSmart/models/disease.dart';
 import 'package:AgriSmart/models/scan_result.dart';
@@ -10,6 +9,7 @@ import 'package:google_mlkit_image_labeling/google_mlkit_image_labeling.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as path;
+import 'package:AgriSmart/services/firestore_service.dart'; // Importez le nouveau service Firestore
 
 class ScanScreen extends StatefulWidget {
   const ScanScreen({super.key});
@@ -25,6 +25,8 @@ class _ScanScreenState extends State<ScanScreen> {
   double _confidence = 0.0;
 
   final ImagePicker _picker = ImagePicker();
+  final FirestoreService _firestoreService =
+      FirestoreService(); // Instance du service Firestore
 
   Future<void> _pickImage(ImageSource source) async {
     try {
@@ -43,12 +45,14 @@ class _ScanScreenState extends State<ScanScreen> {
         await _analyzeImage(image.path);
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Erreur lors de la sélection de l\'image: $e'),
-          backgroundColor: Theme.of(context).colorScheme.error,
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Erreur lors de la sélection de l\'image: $e'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
     }
   }
 
@@ -70,7 +74,6 @@ class _ScanScreenState extends State<ScanScreen> {
     setState(() => _isAnalyzing = true);
 
     try {
-      // Copie locale du modèle (adapter le chemin si besoin)
       final modelPath =
           await _copyModelToDevice('assets/ml/object_labeler.tflite');
 
@@ -90,24 +93,27 @@ class _ScanScreenState extends State<ScanScreen> {
         final topLabel = labels.reduce(
             (curr, next) => curr.confidence > next.confidence ? curr : next);
 
-        final disease = DiseaseService.getDiseaseByName(topLabel.label);
+        // Utilisation de FirestoreService pour récupérer la maladie
+        final detectedDisease =
+            await _firestoreService.getDiseaseByLabel(topLabel.label);
 
-        if (disease != null) {
+        if (detectedDisease != null) {
           final scanResult = ScanResult(
             id: DateTime.now().millisecondsSinceEpoch.toString(),
-            diseaseId: disease.id,
-            diseaseName: disease.name,
+            diseaseId: detectedDisease.id,
+            diseaseName: detectedDisease.name,
             confidence: topLabel.confidence,
             timestamp: DateTime.now(),
             imagePath: imagePath,
-            plantType: disease.plantType,
-            severity: disease.severity,
+            plantType: detectedDisease.plantType,
+            severity: detectedDisease.severity,
           );
 
-          await StorageService.saveScanResult(scanResult);
+          // Utilisation de FirestoreService pour sauvegarder le résultat
+          await _firestoreService.saveScanResultToCloud(scanResult);
 
           setState(() {
-            _detectedDisease = disease;
+            _detectedDisease = detectedDisease;
             _confidence = topLabel.confidence;
             _isAnalyzing = false;
           });
@@ -115,11 +121,12 @@ class _ScanScreenState extends State<ScanScreen> {
         }
       }
 
+      // Si aucune maladie n'est détectée ou trouvée dans Firestore
       setState(() => _isAnalyzing = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text('Aucune maladie détectée dans cette image')),
+              content: Text('Aucune maladie correspondante trouvée.')),
         );
       }
     } catch (e) {
@@ -394,10 +401,10 @@ class _ScanScreenState extends State<ScanScreen> {
             ),
             const SizedBox(height: 12),
             ...[
-              '📸 Photographiez sous une bonne luminosité',
-              '🍃 Centrez la partie malade de la plante',
-              '🔍 Évitez les photos floues ou trop sombres',
-              '📐 Gardez une distance appropriée',
+              ' Photographiez sous une bonne luminosité',
+              ' Centrez la partie malade de la plante',
+              ' Évitez les photos floues ou trop sombres',
+              ' Gardez une distance appropriée',
             ].map(
               (tip) => Padding(
                 padding: const EdgeInsets.only(bottom: 6),
