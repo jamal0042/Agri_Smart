@@ -18,7 +18,7 @@ class _MainNavigationState extends State<MainNavigation> {
     const HomeScreen(),
     const ScanScreen(),
     const DiseaseDatabaseScreen(),
-    const HistoryScreen(),
+    const ScanHistoryScreen(),
   ];
 
   @override
