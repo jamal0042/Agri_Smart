@@ -73,7 +73,8 @@ class _ScanScreenState extends State<ScanScreen> {
     setState(() => _isAnalyzing = true);
 
     try {
-      final modelPath = await _copyModelToDevice('assets/models/model.tflite');
+      final modelPath = await _copyModelToDevice(
+          'assets/models/votre_modele_normalise.tflite');
 
       final labeler = ImageLabeler(
         options: LocalLabelerOptions(
