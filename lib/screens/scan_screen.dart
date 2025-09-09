@@ -75,7 +75,7 @@ class _ScanScreenState extends State<ScanScreen> {
 
     try {
       final modelPath =
-          await _copyModelToDevice('assets/ml/object_labeler.tflite');
+          await _copyModelToDevice('assets/models/model.tflite');
 
       final labeler = ImageLabeler(
         options: LocalLabelerOptions(
