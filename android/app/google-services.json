@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "59279073337",
+    "project_id": "agrismart-fb805",
+    "storage_bucket": "agrismart-fb805.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:59279073337:android:3fc9ac1b38e18ccbb62de8",
+        "android_client_info": {
+          "package_name": "com.example.agri_smart"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVkhQOn7_C4MGeGLiDkdkqqsDVDHu9lXI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:59279073337:android:f3c9c657bbf9643fb62de8",
+        "android_client_info": {
+          "package_name": "com.example.agrismart_fixed"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVkhQOn7_C4MGeGLiDkdkqqsDVDHu9lXI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
