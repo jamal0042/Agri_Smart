@@ -9,7 +9,7 @@ import 'package:google_mlkit_image_labeling/google_mlkit_image_labeling.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as path;
-import 'package:AgriSmart/services/firestore_service.dart'; // Importez le nouveau service Firestore
+import 'package:AgriSmart/services/firestore_service.dart';
 
 class ScanScreen extends StatefulWidget {
   const ScanScreen({super.key});
@@ -25,8 +25,7 @@ class _ScanScreenState extends State<ScanScreen> {
   double _confidence = 0.0;
 
   final ImagePicker _picker = ImagePicker();
-  final FirestoreService _firestoreService =
-      FirestoreService(); // Instance du service Firestore
+  final FirestoreService _firestoreService = FirestoreService();
 
   Future<void> _pickImage(ImageSource source) async {
     try {
@@ -74,8 +73,7 @@ class _ScanScreenState extends State<ScanScreen> {
     setState(() => _isAnalyzing = true);
 
     try {
-      final modelPath =
-          await _copyModelToDevice('assets/models/model.tflite');
+      final modelPath = await _copyModelToDevice('assets/models/model.tflite');
 
       final labeler = ImageLabeler(
         options: LocalLabelerOptions(
@@ -89,11 +87,9 @@ class _ScanScreenState extends State<ScanScreen> {
       labeler.close();
 
       if (labels.isNotEmpty) {
-        // On prend le label avec la meilleure confiance
         final topLabel = labels.reduce(
             (curr, next) => curr.confidence > next.confidence ? curr : next);
 
-        // Utilisation de FirestoreService pour récupérer la maladie
         final detectedDisease =
             await _firestoreService.getDiseaseByLabel(topLabel.label);
 
@@ -109,7 +105,6 @@ class _ScanScreenState extends State<ScanScreen> {
             severity: detectedDisease.severity,
           );
 
-          // Utilisation de FirestoreService pour sauvegarder le résultat
           await _firestoreService.saveScanResultToCloud(scanResult);
 
           setState(() {
@@ -120,8 +115,6 @@ class _ScanScreenState extends State<ScanScreen> {
           return;
         }
       }
-
-      // Si aucune maladie n'est détectée ou trouvée dans Firestore
       setState(() => _isAnalyzing = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
