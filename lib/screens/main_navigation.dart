@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:AgriSmart/screens/home_screen.dart';
 import 'package:AgriSmart/screens/scan_screen.dart';
 import 'package:AgriSmart/screens/disease_database_screen.dart';
-import 'package:AgriSmart/screens/history_screen.dart';
+import 'package:AgriSmart/screens/history_screen.dart'; // Correction de l'import
 
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
@@ -14,11 +14,19 @@ class MainNavigation extends StatefulWidget {
 class _MainNavigationState extends State<MainNavigation> {
   int _currentIndex = 0;
 
-  final List<Widget> _screens = [
+  // Fonction de rappel pour changer d'onglet
+  void _onStartScan() {
+    setState(() {
+      _currentIndex = 1; // Index de l'écran de scan
+    });
+  }
+
+  // Liste d'écrans avec le callback pour l'écran d'historique
+  late final List<Widget> _screens = [
     const HomeScreen(),
     const ScanScreen(),
     const DiseaseDatabaseScreen(),
-    const ScanHistoryScreen(),
+    ScanHistoryScreen(onStartScan: _onStartScan),
   ];
 
   @override
@@ -29,7 +37,7 @@ class _MainNavigationState extends State<MainNavigation> {
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
+              color: Colors.black.withOpacity(0.1),
               blurRadius: 8,
               offset: const Offset(0, -2),
             ),
@@ -40,7 +48,7 @@ class _MainNavigationState extends State<MainNavigation> {
           onTap: (index) => setState(() => _currentIndex = index),
           type: BottomNavigationBarType.fixed,
           selectedItemColor: Theme.of(context).colorScheme.primary,
-          unselectedItemColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+          unselectedItemColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
           backgroundColor: Theme.of(context).colorScheme.surface,
           elevation: 0,
           items: const [

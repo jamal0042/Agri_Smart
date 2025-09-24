@@ -6,7 +6,8 @@ import 'package:AgriSmart/widgets/scan_result_card.dart';
 import 'package:AgriSmart/screens/disease_detail_screen.dart';
 
 class ScanHistoryScreen extends StatefulWidget {
-  const ScanHistoryScreen({super.key});
+  final VoidCallback onStartScan;
+  const ScanHistoryScreen({super.key, required this.onStartScan});
 
   @override
   State<ScanHistoryScreen> createState() => _ScanHistoryScreenState();
@@ -261,12 +262,9 @@ class _ScanHistoryScreenState extends State<ScanHistoryScreen> {
             ),
             const SizedBox(height: 24),
             ElevatedButton.icon(
+              // Utilise la fonction de rappel pour naviguer
               onPressed: () {
-                // J'ai retiré la ligne qui causait le plantage.
-                // La navigation vers l'onglet de la caméra doit être gérée
-                // par le widget parent qui contient le DefaultTabController.
-                // Par exemple, vous pouvez utiliser une fonction de rappel passée
-                // depuis le parent pour gérer cette action.
+                widget.onStartScan();
               },
               icon: const Icon(Icons.camera_alt_rounded),
               label: const Text('Commencer une analyse'),
