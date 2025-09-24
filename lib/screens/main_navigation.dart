@@ -24,7 +24,7 @@ class _MainNavigationState extends State<MainNavigation> {
   // Liste d'écrans avec le callback pour l'écran d'historique
   late final List<Widget> _screens = [
     const HomeScreen(),
-    const ScanScreen(),
+    const ScanScreen(userId: '',),
     const DiseaseDatabaseScreen(),
     ScanHistoryScreen(onStartScan: _onStartScan),
   ];

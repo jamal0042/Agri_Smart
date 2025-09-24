@@ -22,6 +22,7 @@ dependencies:
   google_mlkit_image_labeling: ^0.14.1
   cloud_firestore: ^6.0.1
   flutter_load_kit: ^0.0.2
+  flutter_tts: ^4.2.3
 
 dev_dependencies:
   flutter_test:

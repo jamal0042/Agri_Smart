@@ -3,11 +3,11 @@ import 'package:AgriSmart/models/disease.dart';
 import 'package:AgriSmart/models/scan_result.dart';
 
 class FirestoreService {
-  final CollectionReference _diseasesCollection = 
+  final CollectionReference _diseasesCollection =
       FirebaseFirestore.instance.collection('maladies');
-  
-  final CollectionReference _scanResultsCollection =
-      FirebaseFirestore.instance.collection('scan_results'); // Nouvelle collection pour l'historique
+
+  // Nouvelle collection pour l'historique
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<Disease?> getDiseaseByLabel(String label) async {
     final querySnapshot = await _diseasesCollection
@@ -23,9 +23,15 @@ class FirestoreService {
     return null;
   }
 
-  Future<void> saveScanResultToCloud(ScanResult result) async {
+  // La méthode prend maintenant le userId en paramètre
+  Future<void> saveScanResultToCloud(ScanResult result, String userId) async {
     try {
-      await _scanResultsCollection.doc(result.id).set(result.toJson());
+      await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('scan_results')
+          .doc(result.id)
+          .set(result.toJson());
       print('Scan result saved to Firestore!');
     } catch (e) {
       print('Error saving scan result to Firestore: $e');

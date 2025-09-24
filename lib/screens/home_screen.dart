@@ -118,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Icons.camera_alt_rounded,
                 () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const ScanScreen()),
+                  MaterialPageRoute(builder: (context) => const ScanScreen(userId: '',)),
                 ),
               ),
             ),

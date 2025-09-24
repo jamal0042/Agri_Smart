@@ -12,7 +12,10 @@ import 'package:path/path.dart' as path;
 import 'package:AgriSmart/services/firestore_service.dart';
 
 class ScanScreen extends StatefulWidget {
-  const ScanScreen({super.key});
+  // Le userId est maintenant un paramètre requis
+  final String userId;
+
+  const ScanScreen({super.key, required this.userId});
 
   @override
   State<ScanScreen> createState() => _ScanScreenState();
@@ -106,13 +109,24 @@ class _ScanScreenState extends State<ScanScreen> {
             severity: detectedDisease.severity,
           );
 
-          await _firestoreService.saveScanResultToCloud(scanResult);
+          // Sauvegarde le résultat avec le userId
+          await _firestoreService.saveScanResultToCloud(
+              scanResult, widget.userId);
 
           setState(() {
             _detectedDisease = detectedDisease;
             _confidence = topLabel.confidence;
             _isAnalyzing = false;
           });
+          if (mounted) {
+            // Affiche un SnackBar en cas de succès
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Analyse et sauvegarde réussies !'),
+                backgroundColor: Colors.green,
+              ),
+            );
+          }
           return;
         }
       }
@@ -395,10 +409,10 @@ class _ScanScreenState extends State<ScanScreen> {
             ),
             const SizedBox(height: 12),
             ...[
-              ' Photographiez sous une bonne luminosité',
-              ' Centrez la partie malade de la plante',
-              ' Évitez les photos floues ou trop sombres',
-              ' Gardez une distance appropriée',
+              'Photographiez sous une bonne luminosité',
+              'Centrez la partie malade de la plante',
+              'Évitez les photos floues ou trop sombres',
+              'Gardez une distance appropriée',
             ].map(
               (tip) => Padding(
                 padding: const EdgeInsets.only(bottom: 6),
