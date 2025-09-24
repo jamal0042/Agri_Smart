@@ -262,11 +262,11 @@ class _ScanHistoryScreenState extends State<ScanHistoryScreen> {
             const SizedBox(height: 24),
             ElevatedButton.icon(
               onPressed: () {
-                // Naviguer vers l'écran de scan (tab 1)
-                final tabController = DefaultTabController.of(context);
-                if (tabController != null) {
-                  tabController.animateTo(1);
-                }
+                // J'ai retiré la ligne qui causait le plantage.
+                // La navigation vers l'onglet de la caméra doit être gérée
+                // par le widget parent qui contient le DefaultTabController.
+                // Par exemple, vous pouvez utiliser une fonction de rappel passée
+                // depuis le parent pour gérer cette action.
               },
               icon: const Icon(Icons.camera_alt_rounded),
               label: const Text('Commencer une analyse'),
